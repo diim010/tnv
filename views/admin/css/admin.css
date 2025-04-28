@@ -1,0 +1,90 @@
+/* Стили для страницы настроек */
+.tnv-settings-page {
+    max-width: 800px;
+    margin: 20px 0;
+}
+
+/* Стили для метабокса виниловой пластинки */
+#vinyl_product_data .tnv-track-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+#vinyl_product_data .tnv-track-position {
+    width: 80px;
+}
+
+#vinyl_product_data .tnv-track-title {
+    flex: 1;
+}
+
+#vinyl_product_data .tnv-track-duration {
+    width: 100px;
+}
+
+/* QR сканер */
+#tnv_qr_scanner_container {
+    margin: 20px 0;
+    max-width: 400px;
+}
+
+#tnv_qr_scanner_container video {
+    width: 100%;
+    height: auto;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Общие стили для кнопок */
+.tnv-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #0073aa;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.tnv-button:hover {
+    background-color: #005177;
+}
+
+.tnv-button.secondary {
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    color: #555;
+}
+
+.tnv-button.secondary:hover {
+    background-color: #e8e8e8;
+}
+
+/* Уведомления */
+.tnv-notice {
+    padding: 10px 15px;
+    margin: 15px 0;
+    border-left: 4px solid;
+    background-color: #fff;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.tnv-notice.success {
+    border-color: #46b450;
+}
+
+.tnv-notice.error {
+    border-color: #dc3232;
+}
+
+.tnv-notice.warning {
+    border-color: #ffb900;
+}
+
+.tnv-notice.info {
+    border-color: #00a0d2;
+}

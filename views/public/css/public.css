@@ -1,0 +1,172 @@
+/* Стили для деталей виниловой пластинки */
+.tnv-vinyl-details {
+    margin: 2em 0;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 4px;
+}
+
+.tnv-vinyl-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 2em;
+}
+
+.tnv-vinyl-info > div {
+    padding: 10px;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.tnv-vinyl-info strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+/* Стили для трек-листа */
+.tnv-tracklist {
+    margin-top: 2em;
+}
+
+.tnv-tracklist table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+}
+
+.tnv-tracklist th,
+.tnv-tracklist td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tnv-tracklist th {
+    background: #f5f5f5;
+    font-weight: 600;
+}
+
+.tnv-tracklist tr:hover {
+    background: #f9f9f9;
+}
+
+/* Кнопка предпрослушивания */
+.tnv-preview-track {
+    padding: 6px 12px;
+    background: #0073aa;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.tnv-preview-track:hover {
+    background: #005177;
+}
+
+/* Модальное окно предпрослушивания */
+.tnv-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 9999;
+}
+
+.tnv-modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.tnv-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.tnv-preview-players {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+@media (min-width: 768px) {
+    .tnv-preview-players {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.tnv-player {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.tnv-player h4 {
+    margin: 0 0 10px;
+    color: #333;
+}
+
+/* Спиннер загрузки */
+.tnv-preview-loading {
+    text-align: center;
+    padding: 20px;
+}
+
+.tnv-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #0073aa;
+    border-radius: 50%;
+    animation: tnv-spin 1s linear infinite;
+}
+
+@keyframes tnv-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Сообщение об ошибке */
+.tnv-preview-error {
+    text-align: center;
+    color: #dc3232;
+    padding: 20px;
+}
+
+/* Встраиваемые плееры */
+.tnv-spotify-embed,
+.tnv-youtube-embed {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+}
+
+.tnv-spotify-embed iframe,
+.tnv-youtube-embed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
