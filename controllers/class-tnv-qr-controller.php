@@ -25,15 +25,26 @@ class TNV_QR_Controller {
             return;
         }
 
+        // Подключаем основную библиотеку QR-сканера
         wp_enqueue_script(
-            'tnv-qr-scanner',
-            TNV_PLUGIN_URL . 'assets/js/qr-scanner.js',
-            array('jquery'),
+            'qr-scanner-lib',
+            TNV_PLUGIN_URL . 'assets/js/qr-scanner.min.js',
+            array(),
             TNV_VERSION,
             true
         );
 
-        wp_localize_script('tnv-qr-scanner', 'tnv_admin', array(
+        // Подключаем наш скрипт QR-сканера
+        wp_enqueue_script(
+            'tnv-qr-scanner',
+            TNV_PLUGIN_URL . 'views/admin/js/qr-scanner.js',
+            array('jquery', 'qr-scanner-lib'),
+            TNV_VERSION,
+            true
+        );
+
+        // Локализация скрипта
+        wp_localize_script('tnv-qr-scanner', 'tnvQR', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('tnv_qr_nonce'),
             'start_scanning' => __('Start Scanning', 'tonna-vinyla'),
@@ -43,7 +54,8 @@ class TNV_QR_Controller {
             'position_placeholder' => __('Position', 'tonna-vinyla'),
             'title_placeholder' => __('Track Title', 'tonna-vinyla'),
             'duration_placeholder' => __('Duration', 'tonna-vinyla'),
-            'remove_track' => __('Remove', 'tonna-vinyla')
+            'remove_track' => __('Remove', 'tonna-vinyla'),
+            'plugin_url' => TNV_PLUGIN_URL
         ));
     }
 

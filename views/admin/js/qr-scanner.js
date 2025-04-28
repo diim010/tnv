@@ -1,7 +1,10 @@
 jQuery(document).ready(function($) {
-    const qrButton = $('#tnv_scan_qr');
-    const container = $('#tnv_qr_scanner_container');
+    const qrButton = $('#tnv-scan-qr');
+    const container = $('#tnv-qr-scanner-container');
     let scanner = null;
+
+    // Устанавливаем путь к воркеру QR-сканера
+    QrScanner.WORKER_PATH = tnvQR.plugin_url + 'assets/js/qr-scanner-worker.min.js';
 
     // Инициализация QR сканера
     qrButton.on('click', function(e) {
@@ -21,20 +24,33 @@ jQuery(document).ready(function($) {
             container.html(videoElem);
             container.show();
 
+            // Проверяем доступ к камере
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    facingMode: "environment",
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                } 
+            });
+            
+            videoElem.srcObject = stream;
+            
             scanner = new QrScanner(
                 videoElem,
                 result => handleScanResult(result),
                 {
                     highlightScanRegion: true,
                     highlightCodeOutline: true,
+                    maxScansPerSecond: 5
                 }
             );
 
             await scanner.start();
-            qrButton.text(tnv_admin.stop_scanning);
+            qrButton.text(tnvQR.stop_scanning);
         } catch (error) {
             console.error('Ошибка запуска сканера:', error);
-            alert(tnv_admin.camera_error);
+            alert(tnvQR.camera_error);
+            stopScanner();
         }
     }
 
@@ -44,9 +60,17 @@ jQuery(document).ready(function($) {
             scanner.stop();
             scanner.destroy();
             scanner = null;
+            
+            // Останавливаем поток с камеры
+            const videoElem = container.find('video')[0];
+            if (videoElem && videoElem.srcObject) {
+                const tracks = videoElem.srcObject.getTracks();
+                tracks.forEach(track => track.stop());
+            }
+            
             container.empty();
             container.hide();
-            qrButton.text(tnv_admin.start_scanning);
+            qrButton.text(tnvQR.start_scanning);
         }
     }
 
@@ -56,11 +80,11 @@ jQuery(document).ready(function($) {
 
         // Отправляем запрос к Discogs через наш API
         $.ajax({
-            url: tnv_admin.ajax_url,
+            url: tnvQR.ajax_url,
             type: 'POST',
             data: {
                 action: 'tnv_scan_qr',
-                nonce: tnv_admin.nonce,
+                nonce: tnvQR.nonce,
                 barcode: result
             },
             beforeSend: function() {
@@ -72,12 +96,12 @@ jQuery(document).ready(function($) {
                 if (response.success) {
                     fillProductFields(response.data);
                 } else {
-                    alert(response.data);
+                    alert(response.data || tnvQR.request_error);
                 }
             },
             error: function() {
                 container.hide();
-                alert(tnv_admin.request_error);
+                alert(tnvQR.request_error);
             }
         });
     }
@@ -85,47 +109,40 @@ jQuery(document).ready(function($) {
     // Заполнение полей продукта данными
     function fillProductFields(data) {
         // Основные поля WooCommerce
-        $('#title').val(data.title);
-        $('#_regular_price').val('');
+        $('#title').val(data.title || '');
         
         // Кастомные поля
-        $('#_tnv_artist').val(data.artist);
-        $('#_tnv_label').val(data.label);
-        $('#_tnv_year').val(data.year);
+        $('#_tnv_artist').val(data.artist || '');
+        $('#_tnv_label').val(data.label || '');
+        $('#_tnv_year').val(data.year || '');
         
         // Очистка и заполнение трек-листа
         const tracklistContainer = $('#tnv_tracklist_container');
         tracklistContainer.empty();
         
-        data.tracklist.forEach((track, index) => {
-            const trackHtml = `
-                <div class="tnv-track-item">
-                    <input type="text" 
-                           name="tnv_tracklist[${index}][position]" 
-                           value="${track.position}" 
-                           class="tnv-track-position">
-                    <input type="text" 
-                           name="tnv_tracklist[${index}][title]" 
-                           value="${track.title}" 
-                           class="tnv-track-title">
-                    <input type="text" 
-                           name="tnv_tracklist[${index}][duration]" 
-                           value="${track.duration}" 
-                           class="tnv-track-duration">
-                    <button type="button" class="button tnv-remove-track">
-                        ${tnv_admin.remove_track}
-                    </button>
-                </div>
-            `;
-            tracklistContainer.append(trackHtml);
-        });
-
-        // Устанавливаем жанры и стили если они есть
-        if (data.genre) {
-            $('#tax-input-vinyl_genre').val(data.genre.join(', '));
-        }
-        if (data.style) {
-            $('#tax-input-vinyl_style').val(data.style.join(', '));
+        if (data.tracklist && data.tracklist.length > 0) {
+            data.tracklist.forEach((track, index) => {
+                const trackHtml = `
+                    <div class="tnv-track-item">
+                        <input type="text" 
+                               name="tnv_tracklist[${index}][position]" 
+                               value="${track.position || ''}" 
+                               class="tnv-track-position">
+                        <input type="text" 
+                               name="tnv_tracklist[${index}][title]" 
+                               value="${track.title || ''}" 
+                               class="tnv-track-title">
+                        <input type="text" 
+                               name="tnv_tracklist[${index}][duration]" 
+                               value="${track.duration || ''}" 
+                               class="tnv-track-duration">
+                        <button type="button" class="button tnv-remove-track">
+                            ${tnvQR.remove_track}
+                        </button>
+                    </div>
+                `;
+                tracklistContainer.append(trackHtml);
+            });
         }
     }
 
@@ -141,17 +158,17 @@ jQuery(document).ready(function($) {
                 <input type="text" 
                        name="tnv_tracklist[${index}][position]" 
                        class="tnv-track-position"
-                       placeholder="${tnv_admin.position_placeholder}">
+                       placeholder="${tnvQR.position_placeholder}">
                 <input type="text" 
                        name="tnv_tracklist[${index}][title]" 
                        class="tnv-track-title"
-                       placeholder="${tnv_admin.title_placeholder}">
+                       placeholder="${tnvQR.title_placeholder}">
                 <input type="text" 
                        name="tnv_tracklist[${index}][duration]" 
                        class="tnv-track-duration"
-                       placeholder="${tnv_admin.duration_placeholder}">
+                       placeholder="${tnvQR.duration_placeholder}">
                 <button type="button" class="button tnv-remove-track">
-                    ${tnv_admin.remove_track}
+                    ${tnvQR.remove_track}
                 </button>
             </div>
         `;

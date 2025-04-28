@@ -76,10 +76,10 @@
 
     <div class="options_group">
         <p class="form-field">
-            <label for="tnv_scan_qr"><?php _e('QR Code', 'tonna-vinyla'); ?></label>
-            <button type="button" class="button" id="tnv_scan_qr"><?php _e('Scan QR Code', 'tonna-vinyla'); ?></button>
+            <label for="tnv-scan-qr"><?php _e('QR Code', 'tonna-vinyla'); ?></label>
+            <button type="button" class="button" id="tnv-scan-qr"><?php _e('Scan QR Code', 'tonna-vinyla'); ?></button>
             <span class="description"><?php _e('Scan QR code to import product data from Discogs', 'tonna-vinyla'); ?></span>
         </p>
-        <div id="tnv_qr_scanner_container" style="display: none;"></div>
+        <div id="tnv-qr-scanner-container" style="display: none;"></div>
     </div>
 </div>

@@ -1,0 +1,24 @@
+{
+  "name": "tnv",
+  "version": "1.0.0",
+  "description": "mkdir -p tonna-vinyla/src/{Admin,Api,Models,Services}\r mkdir -p tonna-vinyla/assets/{css,js}\r mkdir -p tonna-vinyla/languages\r mkdir -p tonna-vinyla/tests/Unit\r mkdir -p tonna-vinyla/vendor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diim010/tnv.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/diim010/tnv/issues"
+  },
+  "homepage": "https://github.com/diim010/tnv#readme",
+  "dependencies": {
+    "qr-scanner": "^1.4.2"
+  },
+  "devDependencies": {}
+}

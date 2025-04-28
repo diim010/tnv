@@ -90,14 +90,33 @@ class Tonna_Vinyla {
             $this->version
         );
 
-        // Скрипты QR-сканера
+        // Библиотека QR-сканера
         wp_enqueue_script(
             'qr-scanner-lib',
-            TNV_PLUGIN_URL . 'assets/js/qr-scanner.js',
-            array('jquery'),
+            TNV_PLUGIN_URL . 'assets/js/qr-scanner.min.js',
+            array(),
             $this->version,
             true
         );
+
+        // Основной скрипт QR-сканера
+        wp_enqueue_script(
+            'tnv-qr-scanner',
+            TNV_PLUGIN_URL . 'views/admin/js/qr-scanner.js',
+            array('jquery', 'qr-scanner-lib'),
+            $this->version,
+            true
+        );
+
+        // Локализация скрипта
+        wp_localize_script('tnv-qr-scanner', 'tnvQR', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('tnv_qr_nonce'),
+            'start_scanning' => __('Start Scanning', 'tonna-vinyla'),
+            'stop_scanning' => __('Stop Scanning', 'tonna-vinyla'),
+            'camera_error' => __('Could not access camera', 'tonna-vinyla'),
+            'request_error' => __('Error processing request', 'tonna-vinyla')
+        ));
     }
 
     /**
